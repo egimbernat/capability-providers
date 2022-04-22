@@ -1,5 +1,4 @@
 name: KVREDIS
-
 on:
   push:
     branches: [ main ]
@@ -20,7 +19,7 @@ env:
 
 jobs:
   rust_check:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
     - uses: actions/checkout@v2
     - id: run-nats
@@ -36,7 +35,7 @@ jobs:
   build_artifact:
     needs: rust_check
     if: startswith(github.ref, 'refs/tags/') # Only run on tag push
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
       - uses: wasmcloud/common-actions/install-wash@main
@@ -55,7 +54,7 @@ jobs:
   github_release:
     if: startswith(github.ref, 'refs/tags/') # Only run on tag push
     needs: build_artifact
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
     - name: Download provider archive
       uses: actions/download-artifact@v2
@@ -74,7 +73,7 @@ jobs:
   artifact_release:
     needs: build_artifact
     if: startswith(github.ref, 'refs/tags/') # Only run on tag push
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
       - name: Download provider archive
